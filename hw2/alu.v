@@ -12,9 +12,6 @@ module alu (A, B, Cin, Op, invA, invB, sign, Out, Ofl, Z);
     output Z;           //zero
 
     wire out_0, out_1, out_2;
-    reg [3:0] a0, [3:0] a1, [3:0] a2, [3:0] a3;
-    reg [3:0] b0, [3:0] b1, [3:0] b2, [3:0] b3;
-    reg [3:0] s0, [3:0] s1, [3:0] s2, [3:0] s3;
     
     wire [15:0] rll, [15:0] sll, [15:0] sra, [15:0] srl;
     wire [15:0] ApB, [15:0] AoB, [15:0] AxB, [15:0] AnB;
@@ -30,37 +27,37 @@ module alu (A, B, Cin, Op, invA, invB, sign, Out, Ofl, Z);
                        .inB(sll[15:0]), 
                        .inC(sra[15:0]), 
                        .inD(srl[15:0]), 
-                       .inE(AnB[15:0]), 
+                       .inE(ApB[15:0]), 
                        .inF(AoB[15:0]), 
                        .inG(AxB[15:0]), 
                        .inH(AnB[15:0]), 
                        .sel(Op[2:0]), 
-                       .out(out[15:0]));
+                       .out(Out[15:0]));
     
-    cla_4bit cla_0 (.A(a0), 
-                    .B(b0), 
-                    .S(Out[3:0]), 
+    cla_4bit cla_0 (.A(A[3:0]), 
+                    .B(B[3:0]), 
+                    .S(ApB[3:0]), 
                     .Cin(Cin), 
                     .Cout(out_0));
                     
-    cla_4bit cla_1 (.A(a1), 
-                    .B(b1), 
-                    .S(Out[7:4]), 
+    cla_4bit cla_1 (.A(A[7:4]), 
+                    .B(B[7:4]), 
+                    .S(ApB[7:4]), 
                     .Cin(out_0), 
                     .Cout(out_1));
                     
-    cla_4bit cla_2 (.A(a2), 
-                    .B(b2), 
-                    .S(Out[11:8]), 
+    cla_4bit cla_2 (.A(A[11:8]), 
+                    .B(B[11:8]), 
+                    .S(ApB[11:8]), 
                     .Cin(out_1), 
                     .Cout(out_2));
                     
-    cla_4bit cla_3 (.A(a3), 
-                    .B(b3), 
-                    .S(Out[15:12]), 
+    cla_4bit cla_3 (.A(A[15:12]), 
+                    .B(B[15:12]), 
+                    .S(ApB[15:12]), 
                     .Cin(out_2), 
                     .Cout(Ofl));
     
-    assign Z = ~(s0[0] | s0[1] | s0[2] | s0[3] | s1[0] | s1[1] | s1[2] | s1[3] | s2[0] | s2[1] | s2[2] | s2[3] | s3[0] | s3[1] | s3[2] | s3[3])
+    or16 zero_check (.a(ApB[7:0]), .b(ApB[15:8]), .out(Z));
     
 endmodule
