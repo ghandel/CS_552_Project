@@ -10,6 +10,7 @@ module shifter(In, Cnt, Op, Out);
 	sll shift_left_logic (.in(In[15:0]), .cnt(Cnt[3:0]), .out(sll_out[15:0]));
 	srl shift_right_logic (.in(In[15:0]), .cnt(Cnt[3:0]), .out(srl_out[15:0]));
 	rll rotate_left_logic (.in(In[15:0]), .cnt(Cnt[3:0]), .out(rll_out[15:0]));
+	sra rotate_right_arith (.in(In[15:0]), .cnt(Cnt[3:0]), .out(sra_out[15:0]));
 	
 	mux_4by16 shift_sel (.inA(rll_out[15:0]), 
 	                     .inB(sll_out[15:0]), 
