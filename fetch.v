@@ -15,7 +15,7 @@ module fetch (PC_old, PC_curr, halt, instruction, clk, rst, err);
     
     assign pc_in[1] = 1'b1 & ~halt;
     
-    assign pcrst = ~rst;
+    assign pcrst = rst;
     
     or16_1 pc_rst (.A(PC_old[15:0]), .B(pcrst), .out(PC_old[15:0]));
     
