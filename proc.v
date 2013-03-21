@@ -72,6 +72,7 @@ module proc (/*AUTOARG*/
                       .PC_old(PC[15:0]), 
                       .alu_op(alu_op[2:0]), 
                       .br_ju_en(br_ju_en),
+                      .read_addr(read2data[15:0]),
                       .PC_curr(PC[15:0]), 
                       .err(err_execute));
                       

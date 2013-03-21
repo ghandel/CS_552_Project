@@ -1,5 +1,5 @@
 module execute (read1data, read2data, sign_ext, PC_old, alu_op, br_ju_en,
-                PC_curr, err);
+                read_addr, PC_curr, err);
 
     input [15:0] read1data;
     input [15:0] read2data;
