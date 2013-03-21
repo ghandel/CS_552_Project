@@ -24,13 +24,13 @@ module decode (instruction, write_data, clk, rst, read1data, read2data,
     wire branch_en;
     wire sign_op;
     wire err_reg, err_reg_sel;
-    wire btr_sel;
+    wire btr_en;
 
     assign err = err_reg | err_reg_sel;
     assign br_ju_en = jump_en | branch_en;
     
     assign btr_en =  instruction[15] & instruction[14] & ~instruction[13] & ~instruction[12] & instruction[11];
-    assign btr[15:0] = 4'hffff;
+    assign btr[15:0] = 4'hf;
     
     // Instruction Control
     
