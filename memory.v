@@ -8,9 +8,11 @@ module memory (addr, read_data, read_en, wr_en, clk, rst, write_data, halt);
     output [15:0] write_data;
     output [15:0] halt;
 
+    wire [15:0] mem_data_out;
+
     // Data Mem
     
-    memory2c data (.data_out(wirte_data[15:0]),
+    memory2c data (.data_out(mem_data_out[15:0]),
                    .data_in(read_data[15:0]),
                    .addr(addr[15:0]),
                    .enable(read_en),
