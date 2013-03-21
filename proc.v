@@ -95,7 +95,7 @@ module proc (/*AUTOARG*/
     mux12_3 write_reg_sel (.A(instruction[10:8]),
                       .B(instruction[7:5]), 
                       .C(instruction[4:2]),
-                      .s(instruction[4:2]),    // should never output this one
+                      .sel(instruction[4:2]),    // should never output this one
                       .sel(regdst[1:0]), 
                       .out(write_reg[2:0]));
     
