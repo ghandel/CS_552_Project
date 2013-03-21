@@ -16,6 +16,7 @@ module decode (instruction, write_data, clk, rst, read1data, read2data,
     output br_ju_en;
     output err;
     
+    wire [15:0] btr;
     wire [2:0] write_reg;
     //wire [2:0] alu_op;
     wire [1:0] regdst;
@@ -23,10 +24,14 @@ module decode (instruction, write_data, clk, rst, read1data, read2data,
     wire branch_en;
     wire sign_op;
     wire err_reg, err_reg_sel;
+    wire btr_sel;
 
     assign err = err_reg | err_reg_sel;
     assign br_ju_en = jump_en | branch_en;
-
+    
+    assign btr_en =  instruction[15] & instruction[14] & ~instruction[13] & ~instruction[12] & instruction[11];
+    assign btr[15:0] = 4'hffff;
+    
     // Instruction Control
     
     instruction_ctl inst_ctl (.op(instruction[15:11]), 
@@ -74,6 +79,13 @@ module decode (instruction, write_data, clk, rst, read1data, read2data,
     mux32_16 alu_sel (.A(read2data[15:0]),
                       .B(sign_ext_out[15:0]), 
                       .sel(alu_op[2]), 
+                      .out(read2data[15:0]));
+    
+    // BTR Select
+    
+    mux32_16 btr_sel (.A(read2data[15:0]),
+                      .B(btr[15:0]),
+                      .sel(btr_en),
                       .out(read2data[15:0]));
     
 endmodule

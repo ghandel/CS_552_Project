@@ -15,16 +15,19 @@ module execute (read1data, read2data, sign_ext, PC_old, alu_op, br_ju_en,
     wire [15:0] br_ju_out;
     wire err_bj_ofl;
     wire err_bj_z;
+    wire sub;
+    
+    assign sub = ~alu_op[2] & ~alu_op[1] & alu_op[0];
     
     // Instruction ALU
     
     alu inst_alu (.A(read1data[15:0]), 
                  .B(read2data[15:0]), 
-                 .cin(1'b0), 
+                 .cin(sub), 
                  .op(alu_op[2:0]), 
-                 .invA(1'b0),               // figure this out
-                 .invB(1'b1), 
-                 .sign(1'b1), 
+                 .invA(1'b0),
+                 .invB(sub), 
+                 .sign(read2data[15]), 
                  .out(read_addr[15:0]), 
                  .ofl(ofl), 
                  .Z(zero));
