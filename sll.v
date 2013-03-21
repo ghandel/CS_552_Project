@@ -5,7 +5,9 @@ module sll (in, cnt, out);
 	
 	output [15:0] out;
 	
-	wire [15:0] first_out, [15:0] second_out, [15:0] third_out;
+	wire [15:0] first_out;
+	wire [15:0] second_out;
+	wire [15:0] third_out;
 	
 	sll_0 shift0 (.in(in[15:0]), .cnt(cnt[0]), .out(first_out[15:0]));
 	sll_1 shift1 (.in(first_out[15:0]), .cnt(cnt[1]), .out(second_out[15:0]));
