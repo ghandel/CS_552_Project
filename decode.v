@@ -9,7 +9,7 @@ module decode (instruction, write_data, clk, rst, read1data, read2data,
     output [15:0] read1data;
     output [15:0] read2data;
     output [15:0] sign_ext_out;
-    output [2:0] alu_op,;
+    output [2:0] alu_op;
     output mem_read_en;
     output mem_wr_en;
     output reg_wr_en;

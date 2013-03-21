@@ -81,7 +81,7 @@ module proc (/*AUTOARG*/
                     .wr_en(mem_wr_en), 
                     .clk(clk), 
                     .rst(rst), 
-                    .write_data(write_data[15:0])
+                    .write_data(write_data[15:0]),
                     .halt(err_halt));
     
     assign err = err_fecth | err_decode | err_execute | err_halt;
