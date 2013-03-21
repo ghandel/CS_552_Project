@@ -27,11 +27,11 @@ module alu (A, B, cin, op, invA, invB, sign, out, ofl, Z);
                   .ofl(ofl),
                   .out(arith_out[15:0]));
     
-    mux32_16 op_sel (.inA(shift_out[15:0]), 
-                     .inB(arith_out[15:0]), 
+    mux32_16 op_sel (.A(shift_out[15:0]), 
+                     .B(arith_out[15:0]), 
                      .sel(op[2]), 
                      .out(out[15:0]));
     
-    or16 zero_check (.a(out[7:0]), .b(out[15:8]), .out(Z));
+    or16 zero_check (.A(out[7:0]), .B(out[15:8]), .out(Z));
     
 endmodule

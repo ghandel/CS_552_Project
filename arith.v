@@ -26,22 +26,22 @@ module arith (A, B, op, sign, cin, ofl, out);
     inverter_16bit inv0 (.in(A[15:0]), .out(nA[15:0]));
     inverter_16bit inv1 (.in(B[15:0]), .out(nB[15:0]));
     
-    cla_16bit cla0 (.a(A[15:0]), 
-                    .b(B[15:0]), 
+    cla_16bit cla0 (.A(A[15:0]), 
+                    .B(B[15:0]), 
                     .cin(cin), 
                     .cout(cout_a), 
                     .out(ApB[15:0]));
     
-    cla_16bit cla1 (.a(A[15:0]), 
-                    .b(nB[15:0]), 
+    cla_16bit cla1 (.A(A[15:0]), 
+                    .B(nB[15:0]), 
                     .cin(sub), 
                     .cout(cout_s), 
                     .out(AsB[15:0]));    
     
-    mux_4by16 select (.inA(ApB[15:0]), 
-                      .inB(AsB[15:0]), 
-                      .inC(AxB[15:0]), 
-                      .inD(AnB[15:0]), 
+    mux_4by16 select (.A(ApB[15:0]), 
+                      .B(AsB[15:0]), 
+                      .C(AxB[15:0]), 
+                      .D(AnB[15:0]), 
                       .sel(op[1:0]), 
                       .out(out[15:0]));
     
