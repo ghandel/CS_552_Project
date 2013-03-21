@@ -4,9 +4,9 @@ module memory (addr, read_data, read_en, wr_en, clk, rst, write_data, halt);
     input [15:0] read_data;
     input read_en, wr_en;
     input clk, rst;
+    input halt;
     
     output [15:0] write_data;
-    output [15:0] halt;
 
     wire [15:0] mem_data_out;
 
@@ -17,7 +17,7 @@ module memory (addr, read_data, read_en, wr_en, clk, rst, write_data, halt);
                    .addr(addr[15:0]),
                    .enable(read_en),
                    .wr(mem_wr_en),
-                   .createdump(1'b0),
+                   .createdump(halt),
                    .clk(clk),
                    .rst(rst));
     

@@ -43,7 +43,10 @@ module proc (/*AUTOARG*/
     wire err_decode;
     wire err_execute;
     wire err_memory;
-    wire err_halt;
+    
+    wire halt;
+    
+    assign halt = ~instruction[15] & ~instruction[14] & ~instruction[13] & ~instruction[12] & ~instruction[11];
     
     fetch fetch0 (.PC_old(PC[15:0]), 
                   .PC_curr(PC[15:0]), 
@@ -83,7 +86,7 @@ module proc (/*AUTOARG*/
                     .clk(clk), 
                     .rst(rst), 
                     .write_data(write_data[15:0]),
-                    .halt(err_halt));
+                    .halt(halt));
     
     assign err = err_fetch | err_decode | err_execute | err_halt;
     

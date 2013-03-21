@@ -20,11 +20,11 @@ module execute (read1data, read2data, sign_ext, PC_old, alu_op, br_ju_en,
     
     alu inst_alu (.A(read1data[15:0]), 
                  .B(read2data[15:0]), 
-                 .cin(), 
+                 .cin(1'b0), 
                  .op(alu_op[2:0]), 
                  .invA(1'b0),               // figure this out
-                 .invB(), 
-                 .sign(), 
+                 .invB(1'b1), 
+                 .sign(1'b1), 
                  .out(read_addr[15:0]), 
                  .ofl(ofl), 
                  .Z(zero));
