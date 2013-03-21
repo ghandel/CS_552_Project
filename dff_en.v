@@ -8,7 +8,7 @@ module dff_en (q, d, en, clk, rst);
 
   wire mux_out;
 
-  mux2_1 mux (.InA(q), .InB(d), .S(en), .Out(mux_out));
+  mux2_1 mux (.A(q), .B(d), .s(en), .out(mux_out));
 
   dff dff_0 (.q(q), .d(mux_out), .clk(clk), .rst(rst));
   

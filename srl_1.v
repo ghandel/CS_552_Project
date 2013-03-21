@@ -19,7 +19,7 @@ module srl_1 (in, cnt, out);
 	mux2_1 sub11 (.A(in[11]), .B(in[13]), .s(cnt), .out(out[11]));
 	mux2_1 sub12 (.A(in[12]), .B(in[14]), .s(cnt), .out(out[12]));
 	mux2_1 sub13 (.A(in[13]), .B(in[15]), .s(cnt), .out(out[13]));
-	mux2_1 sub14 (.A(in[14]), .B(0), .s(cnt), .out(out[14]));
-	mux2_1 sub15 (.A(in[15]), .B(0), .s(cnt), .out(out[15]));
+	mux2_1 sub14 (.A(in[14]), .B(1'b0), .s(cnt), .out(out[14]));
+	mux2_1 sub15 (.A(in[15]), .B(1'b0), .s(cnt), .out(out[15]));
 	
 endmodule
