@@ -85,7 +85,7 @@ module proc (/*AUTOARG*/
                     .write_data(write_data[15:0]),
                     .halt(err_halt));
     
-    assign err = err_fecth | err_decode | err_execute | err_halt;
+    assign err = err_fetch | err_decode | err_execute | err_halt;
     
 endmodule // proc
 // DUMMY LINE FOR REV CONTROL :0:
