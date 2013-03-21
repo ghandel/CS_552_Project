@@ -14,6 +14,10 @@ module fetch (PC_old, PC_curr, halt, instruction, clk, rst, err);
     
     assign pc_in[1] = 1'b1 & ~halt;
     
+    pcrst = ~rst;
+    
+    or16_1 pc_rst (.A(PC_old[15:0]), .B(pcrst), .out(PC_old[15:0]));
+    
     alu pc_inc (.A(PC_old[15:0]), 
                  .B(16'b10), 
                  .cin(1'b0), 
