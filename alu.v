@@ -15,7 +15,7 @@ module alu (A, B, cin, op, invA, invB, sign, out, ofl, Z);
     wire [15:0] arith_out;
     
     shifter shift0 (.in(A[15:0]), 
-                    .Cnt(B[3:0]), 
+                    .cnt(B[3:0]), 
                     .op(op[1:0]), 
                     .out(shift_out[15:0]));
     

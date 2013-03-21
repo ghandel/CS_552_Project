@@ -44,7 +44,7 @@ module proc (/*AUTOARG*/
     wire [15:0] br_ju_out;
     wire br_ju_en;
     wire [15:0] mem_data_out;
-    wire [15:0] zero;
+    wire zero;
     wire err_pc_ofl;
     wire err_pc_z;
     wire err_reg;
@@ -94,8 +94,8 @@ module proc (/*AUTOARG*/
     
     mux12_3 write_reg_sel (.A(instruction[10:8]),
                       .B(instruction[7:5]), 
-                      .inC(instruction[4:2]),
-                      .inD(instruction[4:2]),    // should never output this one
+                      .C(instruction[4:2]),
+                      .S(instruction[4:2]),    // should never output this one
                       .sel(regdst[1:0]), 
                       .out(write_reg[2:0]));
     
@@ -114,7 +114,7 @@ module proc (/*AUTOARG*/
     
     // Sign Extend
     
-    sign_ext ext0 (.in(instruction[4:0]), 
+    sign_ext ext0 (.in(instruction[7:0]), 
                    .op(sign_op),                             // op is whether to 
                    .out(sign_ext_out[15:0]));     // extend for 8 bits or 5 bits
     
@@ -136,7 +136,7 @@ module proc (/*AUTOARG*/
                  .sign(), 
                  .out(alu_to_wb[15:0]), 
                  .ofl(ofl), 
-                 .Z(zero[15:0]));
+                 .Z(zero));
                   
     // Branch/Jump ALU
     
