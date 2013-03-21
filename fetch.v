@@ -11,10 +11,11 @@ module fetch (PC_old, PC_curr, halt, instruction, clk, rst, err);
     wire err_pc_ofl;
     wire err_pc_z;
     wire [15:0] pc_in;
+    wire pcrst;
     
     assign pc_in[1] = 1'b1 & ~halt;
     
-    pcrst = ~rst;
+    assign pcrst = ~rst;
     
     or16_1 pc_rst (.A(PC_old[15:0]), .B(pcrst), .out(PC_old[15:0]));
     
