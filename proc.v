@@ -50,6 +50,7 @@ module proc (/*AUTOARG*/
     
     fetch fetch0 (.PC_old(PC[15:0]), 
                   .PC_curr(PC[15:0]), 
+                  .halt(halt),
                   .instruction(instruction[15:0]), 
                   .clk(clk), 
                   .rst(rst), 
