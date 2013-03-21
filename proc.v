@@ -27,7 +27,7 @@ module proc (/*AUTOARG*/
     
     wire [15:0] PC;
     wire [15:0] instruction;
-    wire regdst[1:0];
+    wire [1:0] regdst;
     wire jump_en;
     wire branch_en;
     wire mem_read_en;
@@ -35,15 +35,16 @@ module proc (/*AUTOARG*/
     wire reg_wr_en;
     wire [15:0] read1data;
     wire [15:0] read2data;
-    wire [15:0] writedata;
+    wire [15:0] write_data;
     wire [2:0] alu_op;
     wire [2:0] write_reg;
     wire [15:0] sign_ext_out;
     wire sign_op;
     wire [15:0] alu_to_wb;
     wire [15:0] br_ju_out;
-    wire br_ju_sel;
+    wire br_ju_en;
     wire [15:0] mem_data_out;
+    wire [15:0] zero;
     wire err_pc_ofl;
     wire err_pc_z;
     wire err_reg;
@@ -51,19 +52,19 @@ module proc (/*AUTOARG*/
     wire err_bj_z;
     
     assign err = err_pc_ofl | err_pc_z | err_reg | err_bj_ofl | err_bj_z;
-    assign br_ju_sel = jump_en | branch_en;
+    assign br_ju_en = jump_en | branch_en;
     
     // PC Increment
     
     alu pc_inc (.A(PC[15:0]), 
                  .B(16'b10), 
-                 .Cin(1'b0), 
-                 .Op(3'b100), 
+                 .cin(1'b0), 
+                 .op(3'b100), 
                  .invA(1'b0), 
                  .invB(1'b0), 
                  .sign(1'b0), 
-                 .Out(PC[15:0]), 
-                 .Ofl(err_pc_ofl), 
+                 .out(PC[15:0]), 
+                 .ofl(err_pc_ofl), 
                  .Z(err_pc_z));
     
     // Instruction Mem
@@ -91,8 +92,8 @@ module proc (/*AUTOARG*/
     
     // Write Register Select
     
-    mux12_3 write_reg_sel (.inA(intruction[10:8]),
-                      .inB(instruction[7:5]), 
+    mux12_3 write_reg_sel (.A(instruction[10:8]),
+                      .B(instruction[7:5]), 
                       .inC(instruction[4:2]),
                       .inD(instruction[4:2]),    // should never output this one
                       .sel(regdst[1:0]), 
@@ -114,13 +115,13 @@ module proc (/*AUTOARG*/
     // Sign Extend
     
     sign_ext ext0 (.in(instruction[4:0]), 
-                   .op(sign_op),                             // Op is whether to 
+                   .op(sign_op),                             // op is whether to 
                    .out(sign_ext_out[15:0]));     // extend for 8 bits or 5 bits
     
     // ALU Select
     
-    mux32_16 alu_sel (.inA(read2data[15:0]),
-                      .inB(sign_ext_out[15:0]), 
+    mux32_16 alu_sel (.A(read2data[15:0]),
+                      .B(sign_ext_out[15:0]), 
                       .sel(alu_op[2]), 
                       .out(read2data[15:0]));
     
@@ -128,33 +129,33 @@ module proc (/*AUTOARG*/
     
     alu inst_alu (.A(read1data[15:0]), 
                  .B(read2data[15:0]), 
-                 .Cin(), 
-                 .Op(alu_op[2:0]), 
+                 .cin(), 
+                 .op(alu_op[2:0]), 
                  .invA(),               // figure this out
                  .invB(), 
                  .sign(), 
-                 .Out(alu_to_wb[15:0]), 
-                 .Ofl(Ofl), 
+                 .out(alu_to_wb[15:0]), 
+                 .ofl(ofl), 
                  .Z(zero[15:0]));
                   
     // Branch/Jump ALU
     
     alu branch_jump_alu (.A(PC[15:0]), 
                          .B(sign_ext_out[15:0]), 
-                         .Cin(1'b0), 
-                         .Op(3'b100), 
+                         .cin(1'b0), 
+                         .op(3'b100), 
                          .invA(1'b0), 
                          .invB(1'b0), 
                          .sign(1'b1), 
-                         .Out(br_ju_out[15:0]), 
-                         .Ofl(err_bj_ofl), 
+                         .out(br_ju_out[15:0]), 
+                         .ofl(err_bj_ofl), 
                          .Z(err_bj_z));
                          
     // Branch/Jump Select
     
-    mux32_16 br_ju_sel (.inA(PC[15:0]),
-                      .inB(br_ju_out[15:0]), 
-                      .sel(br_ju_sel), 
+    mux32_16 br_ju_sel (.A(PC[15:0]),
+                      .B(br_ju_out[15:0]), 
+                      .sel(br_ju_en), 
                       .out(PC[15:0]));
     
     // Data Mem
@@ -170,10 +171,10 @@ module proc (/*AUTOARG*/
     
     // Write Data Sel
     
-    mux32_16 data_sel (.inA(mem_data_out[15:0]),
-                      .inB(read2data[15:0]), 
+    mux32_16 data_sel (.A(mem_data_out[15:0]),
+                      .B(read2data[15:0]), 
                       .sel(mem_read_en), 
-                      .out(writedata[15:0]));
+                      .out(write_data[15:0]));
 
 endmodule // proc
 // DUMMY LINE FOR REV CONTROL :0:
