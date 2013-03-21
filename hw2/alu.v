@@ -23,6 +23,7 @@ module alu (A, B, Cin, Op, invA, invB, sign, Out, Ofl, Z);
                   .b(B[15:0]),
                   .op(Op[1:0]),
                   .sign(sign),
+                  .cin(Cin),
                   .ofl(Ofl),
                   .out(arith_out[15:0]));
     

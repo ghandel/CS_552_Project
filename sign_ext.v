@@ -3,7 +3,7 @@ module sign_ext (in, op, out);
     input [7:0] in;
     input op;
     
-    output [9:0] out;
+    output [15:0] out;
     
     mux2_1 mux0 (.InA(in[0]), .InB(in[0]), .S(op), .Out(out[0]));
     mux2_1 mux0 (.InA(in[1]), .InB(in[1]), .S(op), .Out(out[1]));
@@ -15,5 +15,11 @@ module sign_ext (in, op, out);
     mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[7]));
     mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[8]));
     mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[9]));
+    mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[10]));
+    mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[11]));
+    mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[12]));
+    mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[13]));
+    mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[14]));
+    mux2_1 mux0 (.InA(in[4]), .InB(in[7]), .S(op), .Out(out[15]));
     
 endmodule

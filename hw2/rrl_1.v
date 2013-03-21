@@ -1,4 +1,4 @@
-module sra_1 (In, Cnt, Out);
+module rrl_1 (In, Cnt, Out);
 
 	input [15:0]In;
 	input Cnt;
@@ -19,7 +19,7 @@ module sra_1 (In, Cnt, Out);
 	mux2_1 sub12(In[11], In[13], Cnt, Out[11]);
 	mux2_1 sub13(In[12], In[14], Cnt, Out[12]);
 	mux2_1 sub14(In[13], In[15], Cnt, Out[13]);
-	mux2_1 sub15(In[14], In[15], Cnt, Out[14]);
-	mux2_1 sub16(In[15], In[15], Cnt, Out[15]);
+	mux2_1 sub15(In[14], In[0], Cnt, Out[14]);
+	mux2_1 sub16(In[15], In[1], Cnt, Out[15]);
 	
 endmodule

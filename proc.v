@@ -26,14 +26,39 @@ module proc (/*AUTOARG*/
     // PC
     
     wire [15:0] PC;
-    wire cin_zero;
+    wire [15:0] instruction;
+    wire regdst[1:0];
+    wire jump_en;
+    wire branch_en;
+    wire mem_read_en;
+    wire mem_wr_en;
+    wire reg_wr_en;
+    wire [15:0] read1data;
+    wire [15:0] read2data;
+    wire [15:0] writedata;
+    wire [2:0] alu_op;
+    wire [2:0] write_reg;
+    wire [15:0] sign_ext_out;
+    wire sign_op;
+    wire [15:0] alu_to_wb;
+    wire [15:0] br_ju_out;
+    wire br_ju_sel;
+    wire [15:0] mem_data_out;
+    wire err_pc_ofl;
+    wire err_pc_z;
+    wire err_reg;
+    wire err_bj_ofl;
+    wire err_bj_z;
+    
+    assign err = err_pc_ofl | err_pc_z | err_reg | err_bj_ofl | err_bj_z;
+    assign br_ju_sel = jump_en | branch_en;
     
     // PC Increment
     
     alu pc_inc (.A(PC[15:0]), 
                  .B(16'b10), 
                  .Cin(1'b0), 
-                 .Op(3'b0), 
+                 .Op(3'b100), 
                  .invA(1'b0), 
                  .invB(1'b0), 
                  .sign(1'b0), 
@@ -43,117 +68,112 @@ module proc (/*AUTOARG*/
     
     // Instruction Mem
     
-    memory2c instructions (.data_out(),
-                           .data_in(),
-                           .addr(),
-                           .enable(),
-                           .wr(),
-                           .createdump(),
+    memory2c instructions (.data_out(instruction[15:0]),
+                           .data_in(16'b0),
+                           .addr(PC[15:0]),
+                           .enable(1'b1),
+                           .wr(1'b0),
+                           .createdump(1'b0),
                            .clk(clk),
                            .rst(rst));
     
     // Instruction Control
     
-    instruction_ctl inst_ctl (.op(), 
-                              .alu_ctl(),
-                              .regdst(), 
-                              .jump(), 
-                              .branch(), 
-                              .memread(), 
-                              .alu_op(), 
-                              .memwrite(), 
-                              .regwrite());
+    instruction_ctl inst_ctl (.op(instruction[15:11]), 
+                              .alu_ctl(instruction[1:0]),
+                              .regdst(regdst[1:0]), 
+                              .jump(jump_en), 
+                              .branch(branch_en), 
+                              .memread(mem_read_en), 
+                              .alu_op(alu_op[2:0]), 
+                              .memwrite(mem_wr_en), 
+                              .regwrite(reg_wr_en));
     
     // Write Register Select
     
-    mux12_3 write_reg_sel (.inA(),
-                      .inB(), 
-                      .sel(), 
-                      .out());
+    mux12_3 write_reg_sel (.inA(intruction[10:8]),
+                      .inB(instruction[7:5]), 
+                      .inC(instruction[4:2]),
+                      .inD(instruction[4:2]),    // should never output this one
+                      .sel(regdst[1:0]), 
+                      .out(write_reg[2:0]));
     
     // Registers
     
-    rf registers (.read1data(),
-                  .read2data(),
-                  .err(reg_err),
+    rf registers (.read1data(read1data[15:0]),
+                  .read2data(read2data[15:0]),
+                  .err(err_reg),
                   .clk(clk),
                   .rst(rst),
-                  .read1regsel(),
-                  .read2regsel(),
-                  .writeregsel(),
-                  .writedata(),
-                  .write());
+                  .read1regsel(instruction[10:8]),
+                  .read2regsel(instruction[7:5]),
+                  .writeregsel(write_reg),
+                  .writedata(write_data[15:0]),
+                  .write(reg_wr_en));
     
     // Sign Extend
     
-    sign_ext ext0 (.in(), // Op is whether to extend for 8 bits or 5 bits
-                   .op(),
-                   .out()); 
+    sign_ext ext0 (.in(instruction[4:0]), 
+                   .op(sign_op),                             // Op is whether to 
+                   .out(sign_ext_out[15:0]));     // extend for 8 bits or 5 bits
     
     // ALU Select
     
-    mux32_16 alu_sel (.inA(),
-                      .inB(), 
-                      .sel(), 
-                      .out());
+    mux32_16 alu_sel (.inA(read2data[15:0]),
+                      .inB(sign_ext_out[15:0]), 
+                      .sel(alu_op[2]), 
+                      .out(read2data[15:0]));
     
     // Instruction ALU
     
-    alu inst_alu (.A(), 
-                 .B(), 
+    alu inst_alu (.A(read1data[15:0]), 
+                 .B(read2data[15:0]), 
                  .Cin(), 
-                 .Op(), 
-                 .invA(), 
+                 .Op(alu_op[2:0]), 
+                 .invA(),               // figure this out
                  .invB(), 
                  .sign(), 
-                 .Out(), 
-                 .Ofl(), 
-                 .Z());
+                 .Out(alu_to_wb[15:0]), 
+                 .Ofl(Ofl), 
+                 .Z(zero[15:0]));
                   
     // Branch/Jump ALU
     
-    alu branch_jump_alu (.A(), 
-                         .B(), 
-                         .Cin(), 
-                         .Op(), 
-                         .invA(), 
-                         .invB(), 
-                         .sign(), 
-                         .Out(), 
-                         .Ofl(), 
-                         .Z());
+    alu branch_jump_alu (.A(PC[15:0]), 
+                         .B(sign_ext_out[15:0]), 
+                         .Cin(1'b0), 
+                         .Op(3'b100), 
+                         .invA(1'b0), 
+                         .invB(1'b0), 
+                         .sign(1'b1), 
+                         .Out(br_ju_out[15:0]), 
+                         .Ofl(err_bj_ofl), 
+                         .Z(err_bj_z));
                          
-    // Branch Select
+    // Branch/Jump Select
     
-    mux32_16 branch_sel (.inA(),
-                      .inB(), 
-                      .sel(), 
-                      .out());
-    
-    // Jump Select
-    
-    mux32_16 jump_sel (.inA(),
-                      .inB(), 
-                      .sel(), 
-                      .out());
+    mux32_16 br_ju_sel (.inA(PC[15:0]),
+                      .inB(br_ju_out[15:0]), 
+                      .sel(br_ju_sel), 
+                      .out(PC[15:0]));
     
     // Data Mem
     
-    memory2c data (.data_out(),
-                   .data_in(),
-                   .addr(),
-                   .enable(),
-                   .wr(),
-                   .createdump(),
+    memory2c data (.data_out(mem_data_out[15:0]),
+                   .data_in(read2data[15:0]),
+                   .addr(alu_to_wb[15:0]),
+                   .enable(mem_read_en),
+                   .wr(mem_wr_en),
+                   .createdump(1'b0),
                    .clk(clk),
                    .rst(rst));
     
     // Write Data Sel
     
-    mux32_16 data_sel (.inA(),
-                      .inB(), 
-                      .sel(), 
-                      .out());
+    mux32_16 data_sel (.inA(mem_data_out[15:0]),
+                      .inB(read2data[15:0]), 
+                      .sel(mem_read_en), 
+                      .out(writedata[15:0]));
 
 endmodule // proc
 // DUMMY LINE FOR REV CONTROL :0:
