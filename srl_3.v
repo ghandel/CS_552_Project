@@ -13,13 +13,13 @@ module srl_3 (in, cnt, out);
 	mux2_1 sub5 (.A(in[5]), .B(in[13]), .s(cnt), .out(out[5]));
 	mux2_1 sub6 (.A(in[6]), .B(in[14]), .s(cnt), .out(out[6]));
 	mux2_1 sub7 (.A(in[7]), .B(in[15]), .s(cnt), .out(out[7]));
-	mux2_1 sub8 (.A(in[8]), .B(0), .s(cnt), .out(out[8]));
-	mux2_1 sub9 (.A(in[9]), .B(0), .s(cnt), .out(out[9]));
-	mux2_1 sub10 (.A(in[10]), .B(0), .s(cnt), .out(out[10]));
-	mux2_1 sub11 (.A(in[11]), .B(0), .s(cnt), .out(out[11]));
-	mux2_1 sub12 (.A(in[12]), .B(0), .s(cnt), .out(out[12]));
-	mux2_1 sub13 (.A(in[13]), .B(0), .s(cnt), .out(out[13]));
-	mux2_1 sub14 (.A(in[14]), .B(0), .s(cnt), .out(out[14]));
-	mux2_1 sub15 (.A(in[15]), .B(0), .s(cnt), .out(out[15]));
+	mux2_1 sub8 (.A(in[8]), .B(1'b0), .s(cnt), .out(out[8]));
+	mux2_1 sub9 (.A(in[9]), .B(1'b0), .s(cnt), .out(out[9]));
+	mux2_1 sub10 (.A(in[10]), .B(1'b0), .s(cnt), .out(out[10]));
+	mux2_1 sub11 (.A(in[11]), .B(1'b0), .s(cnt), .out(out[11]));
+	mux2_1 sub12 (.A(in[12]), .B(1'b0), .s(cnt), .out(out[12]));
+	mux2_1 sub13 (.A(in[13]), .B(1'b0), .s(cnt), .out(out[13]));
+	mux2_1 sub14 (.A(in[14]), .B(1'b0), .s(cnt), .out(out[14]));
+	mux2_1 sub15 (.A(in[15]), .B(1'b0), .s(cnt), .out(out[15]));
 	
 endmodule

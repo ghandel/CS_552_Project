@@ -5,7 +5,7 @@ module sll_0 (in, cnt, out);
 
 	output [15:0] out;
 	
-	mux2_1 sub0 (.A(in[0]), .B(0), .s(cnt), .out(out[0]));
+	mux2_1 sub0 (.A(in[0]), .B(1'b0), .s(cnt), .out(out[0]));
 	mux2_1 sub1 (.A(in[1]), .B(in[0]), .s(cnt), .out(out[1]));
 	mux2_1 sub2 (.A(in[2]), .B(in[1]), .s(cnt), .out(out[2]));
 	mux2_1 sub3 (.A(in[3]), .B(in[2]), .s(cnt), .out(out[3]));
