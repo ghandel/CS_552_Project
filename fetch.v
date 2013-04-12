@@ -1,34 +1,42 @@
 module fetch (PC_old, PC_curr, halt, instruction, clk, rst, err);
 
-    input [15:0] PC_old;
-    input halt;
+    input [15:0] PC_old;    // current PC to be updated
+    input halt;             // determines if HALT was called
     input clk, rst;
     
-    output [15:0] PC_curr;
+    output [15:0] PC_curr;  // updated PC
     output [15:0] instruction;
     output err;
     
     wire err_pc_ofl;
     wire err_pc_z;
-    wire [15:0] pc_in;
-    wire pcrst;
     
-    assign pc_in[1] = 1'b1 & ~halt;
+    //wire [15:0] pc_inc;
     
-    assign pcrst = rst;
+    //assign pc_inc[1] = 1'b1 & ~halt;
     
-    or16_1 pc_rst (.A(PC_old[15:0]), .B(pcrst), .out(PC_old[15:0]));
+    reg_16bit PC (.out(PC_old),
+                    .in(PC_old), 
+                    .wr_en(~halt), 
+                    .clk(clk), 
+                    .rst(rst));
+                    
+    /*reg_16bit PC_inc (.out(pc_inc[15:0]),
+                    .in(pc_inc[15:0]), 
+                    .wr_en(~halt), 
+                    .clk(clk), 
+                    .rst(rst));*/
     
-    alu pc_inc (.A(PC_old[15:0]), 
-                 .B(16'b10), 
-                 .cin(1'b0), 
-                 .op(3'b100), 
-                 .invA(1'b0), 
-                 .invB(1'b0), 
-                 .sign(1'b0), 
-                 .out(PC_curr[15:0]), 
-                 .ofl(err_pc_ofl), 
-                 .Z(err_pc_z));
+    alu incrementer (.A(PC_old[15:0]), 
+                     .B(16'b10), 
+                     .cin(1'b0), 
+                     .op(3'b100), 
+                     .invA(1'b0), 
+                     .invB(1'b0), 
+                     .sign(1'b0), 
+                     .out(PC_curr[15:0]), 
+                     .ofl(err_pc_ofl), 
+                     .Z(err_pc_z));
     
     assign err = err_pc_ofl | err_pc_z;
     
