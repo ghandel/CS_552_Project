@@ -50,8 +50,8 @@ module proc (/*AUTOARG*/
     assign halt = ~instruction[15] & ~instruction[14] & ~instruction[13] & ~instruction[12] & ~instruction[11];
     
     
-    fetch fetch0 (.PC_old(PC_fetch_in[15:0]), 
-                  .PC_curr(PC_fetch_out[15:0]), 
+    fetch fetch0 (.PC_in(PC_fetch_in[15:0]), 
+                  .PC_out(PC_fetch_out[15:0]), 
                   .halt(halt),
                   .instruction(instruction[15:0]), 
                   .clk(clk), 
