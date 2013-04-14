@@ -75,7 +75,7 @@ module proc (/*AUTOARG*/
     execute execute0 (.read1data(read1data[15:0]), 
                       .read2data(read2data[15:0]), 
                       .sign_ext(sign_ext[15:0]), 
-                      .PC_old(PC_fetch_in[15:0]), 
+                      .PC_old(PC_fetch_out[15:0]), 
                       .alu_op(alu_op[2:0]), 
                       .br_ju_en(br_ju_en),
                       .read_addr(read2data[15:0]),

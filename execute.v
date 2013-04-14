@@ -7,7 +7,6 @@ module execute (read1data, read2data, sign_ext, PC_old, alu_op, br_ju_en,
     input [15:0] PC_old;
     input [2:0] alu_op;
     input br_ju_en;
-    input halt;
     
     output [15:0] read_addr;
     output [15:0] PC_curr;
@@ -19,8 +18,6 @@ module execute (read1data, read2data, sign_ext, PC_old, alu_op, br_ju_en,
     wire sub;
     
     assign sub = ~alu_op[2] & ~alu_op[1] & alu_op[0];
-    
-    wire [15:0] PC_reg_out;
     
     // Instruction ALU
     

@@ -4,7 +4,7 @@ module fetch (PC_old, PC_curr, halt, instruction, clk, rst, err);
     input halt;             // determines if HALT was called
     input clk, rst;
     
-    //output [15:0] PC_curr;  // updated PC
+    output [15:0] PC_curr;  // updated PC
     output [15:0] instruction;
     output err;
     
