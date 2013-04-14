@@ -13,6 +13,7 @@ module alu (A, B, cin, op, invA, invB, sign, out, ofl, Z);
 
     wire [15:0] shift_out;
     wire [15:0] arith_out;
+    wire zero;
     
     shifter shift0 (.in(A[15:0]), 
                     .cnt(B[3:0]), 
@@ -26,12 +27,17 @@ module alu (A, B, cin, op, invA, invB, sign, out, ofl, Z);
                   .cin(cin),
                   .ofl(ofl),
                   .out(arith_out[15:0]));
-    
+    /*
     mux32_16 op_sel (.A(shift_out[15:0]), 
                      .B(arith_out[15:0]), 
                      .sel(op[2]), 
                      .out(out[15:0]));
+     */
+   assign out = arith_out;
+   
     
-    or16 zero_check (.A(out[7:0]), .B(out[15:8]), .out(Z));
+    or16 zero_check (.A(out[7:0]), .B(out[15:8]), .out(zero));
+    
+    assign Z = ~zero;
     
 endmodule

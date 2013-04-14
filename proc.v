@@ -25,7 +25,8 @@ module proc (/*AUTOARG*/
     
     // PC
     
-    wire [15:0] PC;
+    wire [15:0] PC_fetch_in;
+    wire [15:0] PC_fetch_out;
     wire [15:0] instruction;
     wire [15:0] read1data;
     wire [15:0] read2data;
@@ -48,8 +49,9 @@ module proc (/*AUTOARG*/
     
     assign halt = ~instruction[15] & ~instruction[14] & ~instruction[13] & ~instruction[12] & ~instruction[11];
     
-    fetch fetch0 (.PC_old(PC[15:0]), 
-                  .PC_curr(PC[15:0]), 
+    
+    fetch fetch0 (.PC_old(PC_fetch_in[15:0]), 
+                  .PC_curr(PC_fetch_out[15:0]), 
                   .halt(halt),
                   .instruction(instruction[15:0]), 
                   .clk(clk), 
@@ -73,15 +75,15 @@ module proc (/*AUTOARG*/
     execute execute0 (.read1data(read1data[15:0]), 
                       .read2data(read2data[15:0]), 
                       .sign_ext(sign_ext[15:0]), 
-                      .PC_old(PC[15:0]), 
+                      .PC_old(PC_fetch_in[15:0]), 
                       .alu_op(alu_op[2:0]), 
                       .br_ju_en(br_ju_en),
                       .read_addr(read2data[15:0]),
-                      .PC_curr(PC[15:0]), 
+                      .PC_curr(PC_fetch_in[15:0]),
                       .err(err_execute));
                       
     memory memory0 (.addr(read1data[15:0]), 
-                    .read_data(read2data[15:0]), 
+                    .read_data(read2data[15:0]),  
                     .read_en(mem_read_en), 
                     .wr_en(mem_wr_en), 
                     .clk(clk), 
